@@ -1,0 +1,35 @@
+service: candidate-evaluation
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  lambdaHashingVersion: 20201221
+
+  environment:
+    APP_STAGE: ${self:custom.config.appStage}
+    APP_REGION: ${self:custom.config.appRegion}
+    CANDIDATE_DATA_TABLE: ${self:custom.config.candidateDataTable}
+
+functions:
+  - ${file(api/candidateData.yml)}  
+
+resources:
+  Resources:
+    CandidateData: ${file(database/candidateData.yml)}
+
+plugins:
+  - serverless-dynamodb-local
+  - serverless-offline
+
+custom:
+  config: ${file(config/${opt:runFor, 'dev'}.yml)}
+  serverless-offline:
+    port: 3000
+  dynamodb:
+    stages:
+      - ${self:provider.stage}
+    start:
+      port: 8000
+      dbPath: ${self:custom.config.dbPath}
+      migrate: true
+      seed: false

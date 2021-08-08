@@ -1,0 +1,52 @@
+Type: 'AWS::DynamoDB::Table'
+DeletionPolicy: Retain
+Properties:
+  TableName: ${self:custom.config.candidateDataTable}
+  AttributeDefinitions:
+    -
+      AttributeName: email
+      AttributeType: S
+    -
+      AttributeName: name
+      AttributeType: S
+    -
+      AttributeName: type
+      AttributeType: S
+    -
+      AttributeName: total
+      AttributeType: N
+    
+  KeySchema:
+    -
+      AttributeName: email
+      KeyType: HASH
+    -
+      AttributeName: name
+      KeyType: RANGE
+  
+  GlobalSecondaryIndexes:
+    - IndexName: type-total-index
+      KeySchema:
+        - AttributeName: type
+          KeyType: HASH
+        - AttributeName: total
+          KeyType: RANGE
+      Projection:
+        ProjectionType: ALL
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+    - IndexName: total-name-index
+      KeySchema:
+        - AttributeName: total
+          KeyType: HASH
+        - AttributeName: name
+          KeyType: RANGE
+      Projection:
+        ProjectionType: ALL
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+  ProvisionedThroughput:
+    ReadCapacityUnits: 1
+    WriteCapacityUnits: 1

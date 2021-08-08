@@ -1,0 +1,4 @@
+appStage: 'dev'
+appRegion: 'localhost'
+candidateDataTable: CandidateDataDev
+dbPath: '/home/prakhardeepb/personal-ws/candidate_app_db'

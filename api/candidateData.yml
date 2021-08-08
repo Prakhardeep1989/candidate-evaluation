@@ -1,0 +1,13 @@
+candidateHandler:
+  handler: api/candidateHandler.handler
+  description: APIs for performing CRUD operations on CandidateData
+  timeout: 900
+  events:
+    - http:
+        path: api/{entity}
+        method: post
+        cors: true
+        request:
+          parameters:
+            paths:
+              entity: true
